@@ -38,7 +38,8 @@ $ cmake -DCMAKE_PREFIX_PATH="$(brew --prefix qt5-base);$(brew --prefix)" ..
 ``` 
 
 The build will create the `libSimValidationModule` shared library plus the example `flreconstruct` pipeline
-script `SimValidationModule.conf`. Assuming that you have an `input.brio` file that contains
+script `SimValidationModule.conf`. Note that the simulation validation benefits from simulated files with detailed output, i.e. 
+the `__visu_tracks` are filled, producing rather large '.brio' files. Assuming that you have such an `input.brio` file that contains
 the `SD` data bank from `flsimulate`, this can be run as:
 
 ``` console
@@ -59,8 +60,15 @@ Makefile                      SimValidation.root
 The output file will by default be called `SimValidation.root` so don’t run it multiple times concurrently in the same directory
 or you will overwrite the previous file! Use the falaise flreconstruct pipeline instructions to see how to integrate this module in your pipeline.
 
-There is now the option to configure the output filename in the module configuration file.
+There is the option to configure the output filename in the module configuration file.
 The final two lines of the configuration file must read:
 
 [name="processing" type="SimValidationModule"]
+
 filename_out : string[1] = "my_filename.root"
+
+If in doubt about the `__visu_tracks` content of the SD data bank, you can produce that output (careful) when specifying in the simulation configuration script the variant service option:
+
+[name="flsimulate.variantService" type="flsimulate::section"]
+
+settings : string[1] = "simulation:output_profile=all_details"
