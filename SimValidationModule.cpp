@@ -52,8 +52,8 @@ void SimValidationModule::initialize(const datatools::properties& myConfig,
   tree_->SetDirectory(hfile_);
  
   // Some basic counts
-  tree_->Branch("h_calorimeter_hit_count",&validation_.h_calorimeter_hit_count_);
-  tree_->Branch("h_geiger_hit_count",&validation_.h_geiger_hit_count_);
+  tree_->Branch("calorimeter_hit_count",&validation_.calorimeter_hit_count_);
+  tree_->Branch("geiger_hit_count",&validation_.geiger_hit_count_);
   tree_->Branch("vertex_x", &validation_.vertex_x_);
   tree_->Branch("vertex_y", &validation_.vertex_y_);
   tree_->Branch("vertex_z", &validation_.vertex_z_);

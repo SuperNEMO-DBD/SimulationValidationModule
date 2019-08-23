@@ -23,8 +23,8 @@
 
 typedef struct ValidationEventStorage{
 
-  int h_calorimeter_hit_count_; // How many calorimeter hits?
-  int h_geiger_hit_count_; // How many geiger hits?
+  int calorimeter_hit_count_; // How many calorimeter hits?
+  int geiger_hit_count_; // How many geiger hits?
   double vertex_x_; // Vertex distribution in x-direction.
   double vertex_y_; // Vertex distribution in y-direction.
   double vertex_z_; // Vertex distribution in z-direction.
