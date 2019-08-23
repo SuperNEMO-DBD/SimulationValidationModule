@@ -1,11 +1,18 @@
 #include "SimValidationModule.h"
 
+//Standard Library
+#include <iostream>
+
+// Bayeux:
+#include "bayeux/mctools/utils.h"
+
 int mainWallHitType=1302;
 int xWallHitType=1232;
 int gammaVetoHitType=1252;
 
 
 DPP_MODULE_REGISTRATION_IMPLEMENT(SimValidationModule,"SimValidationModule");
+
 SimValidationModule::SimValidationModule() : dpp::base_module()
 {
   filename_output_="SimValidation.root";
@@ -47,7 +54,19 @@ void SimValidationModule::initialize(const datatools::properties& myConfig,
   // Some basic counts
   tree_->Branch("h_calorimeter_hit_count",&validation_.h_calorimeter_hit_count_);
   tree_->Branch("h_geiger_hit_count",&validation_.h_geiger_hit_count_);
-  
+  tree_->Branch("vertex_x", &validation_.vertex_x_);
+  tree_->Branch("vertex_y", &validation_.vertex_y_);
+  tree_->Branch("vertex_z", &validation_.vertex_z_);
+  tree_->Branch("energy_deposit", &validation_.energy_deposit_);
+  tree_->Branch("position_start_x", &validation_.position_start_x_);
+  tree_->Branch("position_start_y", &validation_.position_start_y_);
+  tree_->Branch("position_start_z", &validation_.position_start_z_);
+  tree_->Branch("position_stop_x", &validation_.position_stop_x_);
+  tree_->Branch("position_stop_y", &validation_.position_stop_y_);
+  tree_->Branch("position_stop_z", &validation_.position_stop_z_);
+  tree_->Branch("time_start", &validation_.time_start_);
+  tree_->Branch("time_stop", &validation_.time_stop_);
+
   this->_set_initialized(true);
 }
 //! [SimValidationModule::Process]
@@ -56,37 +75,62 @@ SimValidationModule::process(datatools::things& workItem) {
   
   
   // declare internal variables to mimic the ntuple variables, names are same but in camel case
-  int caloHitCount = 0;
-  int geigerHitCount = 0;
-
+  validation_.position_start_x_.clear();
+  validation_.position_start_y_.clear();
+  validation_.position_start_z_.clear();
+  validation_.position_stop_x_.clear();
+  validation_.position_stop_y_.clear();
+  validation_.position_stop_z_.clear();
+  validation_.time_start_.clear();
+  validation_.time_stop_.clear();
+  validation_.energy_deposit_.clear();
+  validation_.calorimeter_hit_count_ = 0;
+  validation_.geiger_hit_count_ = 0;
+  validation_.vertex_x_ = 0;
+  validation_.vertex_y_ = 0;
+  validation_.vertex_z_ = 0;
 
   // Grab simulated data bank
   try {
     const mctools::simulated_data& SD = workItem.get<mctools::simulated_data>("SD");
 
+    validation_.vertex_x_ = SD.get_vertex().x();
+    validation_.vertex_y_ = SD.get_vertex().y();
+    validation_.vertex_z_ = SD.get_vertex().z();
+
     if (SD.has_step_hits("gg")) 
-      geigerHitCount = SD.get_number_of_step_hits("gg");;
+      validation_.geiger_hit_count_ = SD.get_number_of_step_hits("gg");;
 
     
     if (SD.has_step_hits("calorimeter")) 
-      caloHitCount += SD.get_number_of_step_hits("calorimeter");
+      validation_.calorimeter_hit_count_ += SD.get_number_of_step_hits("calorimeter");
 
     if (SD.has_step_hits("xcalo")) 
-      caloHitCount += SD.get_number_of_step_hits("xcalo");
+      validation_.calorimeter_hit_count_ += SD.get_number_of_step_hits("xcalo");
 
     if (SD.has_step_hits("gveto")) 
-      caloHitCount += SD.get_number_of_step_hits("gveto");
+      validation_.calorimeter_hit_count_ += SD.get_number_of_step_hits("gveto");
 
+    if (SD.has_step_hits("__visu.tracks")) {
+      const auto &rawSteps = SD.get_step_hits("__visu.tracks");
+      for (const datatools::handle<mctools::base_step_hit> &hit : rawSteps) {
+        validation_.energy_deposit_.push_back((hit.get()).get_energy_deposit() / CLHEP::keV);
+        validation_.time_start_.push_back((hit.get()).get_time_start());
+        validation_.time_stop_.push_back((hit.get()).get_time_stop());
+        validation_.position_start_x_.push_back((hit.get()).get_position_start().x());
+        validation_.position_start_y_.push_back((hit.get()).get_position_start().y()); 
+        validation_.position_start_z_.push_back((hit.get()).get_position_start().z()); 
+        validation_.position_stop_x_.push_back((hit.get()).get_position_stop().x()); 
+        validation_.position_stop_y_.push_back((hit.get()).get_position_stop().y()); 
+        validation_.position_stop_z_.push_back((hit.get()).get_position_stop().z()); 
+      }
+    }
   }
   catch (std::logic_error& e) {
     std::cerr << "failed to grab SD bank : " << e.what() << std::endl;
     return dpp::base_module::PROCESS_INVALID;
   }// end try on SD bank
 
-  // Counts
-  validation_.h_calorimeter_hit_count_=caloHitCount;
-  validation_.h_geiger_hit_count_=geigerHitCount;
-  
   tree_->Fill();
 
   // MUST return a status, see ref dpp::processing_status_flags_type

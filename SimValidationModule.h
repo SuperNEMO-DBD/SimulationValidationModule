@@ -4,6 +4,9 @@
 #ifndef SIMVALMODULE_HH
 #define SIMVALMODULE_HH
 // Standard Library
+#include <vector>
+#include <string>
+
 // Third Party
 #include "TFile.h"
 #include "TTree.h"
@@ -19,9 +22,21 @@
 
 
 typedef struct ValidationEventStorage{
-  // Quantities to histogram (h_)
+
   int h_calorimeter_hit_count_; // How many calorimeter hits?
   int h_geiger_hit_count_; // How many geiger hits?
+  double vertex_x_; // Vertex distribution in x-direction.
+  double vertex_y_; // Vertex distribution in y-direction.
+  double vertex_z_; // Vertex distribution in z-direction.
+  std::vector <double> position_start_x_; // Position start in x-direction.
+  std::vector <double> position_start_y_; // Position start in y-direction.
+  std::vector <double> position_start_z_; // Position start in z-direction.
+  std::vector <double> position_stop_x_; // Position stop in x-direction.
+  std::vector <double> position_stop_y_; // Position stop in y-direction.
+  std::vector <double> position_stop_z_; // Position stop in z-direction.
+  std::vector <double> time_start_; // Time Start per entry.
+  std::vector <double> time_stop_; // Time Stop per entry.
+  std::vector <double> energy_deposit_; // Energy Deposit
 
 }Validationeventstorage;
 

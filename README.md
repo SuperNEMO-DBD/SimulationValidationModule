@@ -1,8 +1,7 @@
-# SimValidationModule readme
+# SimValidationModule README
 
-
-Y. Ramachers (Warwick)
-Last updated July 8th 2019
+Yorck Ramachers (Warwick), Bartosz Pyszkowski (Warwick)
+Last updated August 19th 2019
 
 SimValidationModule is a Falaise pipeline module to process a selection of basic validation data and output a ROOT ntuple file, to be used for standard plots and metrics to validate simulation data quality.  
 
@@ -11,7 +10,7 @@ SimValidationModule is a Falaise pipeline module to process a selection of basic
 - SimValidationModule.cpp
 - SimValidationModule.h
 - CMakeLists.txt
-- SimValidationModuleExample.conf.in
+- SimValidationModule.conf.in
 
 
 ## Description
@@ -21,7 +20,7 @@ Add to an flreconstruct pipeline to generate a ROOT ntuple file with some pertin
 ``` console
 $ ls
 CMakeLists.txt                   SimValidationModule.h
-README.md                        SimValidationModuleExample.conf.in
+README.md                        SimValidationModule.conf.in
 SimValidationModule.cpp
 $ mkdir build
 $ cd build
@@ -39,20 +38,20 @@ $ cmake -DCMAKE_PREFIX_PATH="$(brew --prefix qt5-base);$(brew --prefix)" ..
 ``` 
 
 The build will create the `libSimValidationModule` shared library plus the example `flreconstruct` pipeline
-script `SimValidationModuleExample.conf`. Assuming that you have an `input.brio` file that contains
+script `SimValidationModule.conf`. Assuming that you have an `input.brio` file that contains
 the `SD` data bank from `flsimulate`, this can be run as:
 
 ``` console
 ... Assume we run in the build dir ...
 $ ls
-CMakeCache.txt                SimValidationModuleExample.conf
+CMakeCache.txt                SimValidationModule.conf
 CMakeFiles                    cmake_install.cmake
 Makefile
 ...
-$ flreconstruct -i /path/to/input.brio -p SimValidationModuleExample.conf
+$ flreconstruct -i /path/to/input.brio -p SimValidationModule.conf
 ...
 $ ls
-CMakeCache.txt                SimValidationModuleExample.conf
+CMakeCache.txt                SimValidationModule.conf
 CMakeFiles                    cmake_install.cmake
 Makefile                      SimValidation.root
 ```
@@ -65,6 +64,3 @@ The final two lines of the configuration file must read:
 
 [name="processing" type="SimValidationModule"]
 filename_out : string[1] = "my_filename.root"
-
-## Types of branch
-
