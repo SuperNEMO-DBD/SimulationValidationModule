@@ -65,8 +65,9 @@ class SimValidationModule : public dpp::base_module {
   // configurable data member
   std::string filename_output_;
 
-  // geometry service
-  const geomtools::manager* geometry_manager_; //!< The geometry manager
+  // geometry service - placeholder for a future service to request
+  // information from the simulation code.
+  //  const geomtools::manager* geometry_manager_; //!< The geometry manager
 
   // Macro which automatically creates the interface needed
   // to enable the module to be loaded at runtime

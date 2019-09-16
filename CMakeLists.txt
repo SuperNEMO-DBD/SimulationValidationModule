@@ -24,6 +24,8 @@ target_link_libraries(SimValidationModule
 configure_file("SimValidationModule.conf.in" "SimValidationModule.conf" @ONLY)
 
 # Add a basic test of reading a brio file output by the
+# standard pipeline
+enable_testing()
 # - Simulate
 add_test(NAME testValidationModule_simulate
   COMMAND Falaise::flsimulate -o test-simulate.brio

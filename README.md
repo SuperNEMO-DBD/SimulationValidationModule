@@ -67,7 +67,7 @@ The final two lines of the configuration file must read:
 
 filename_out : string[1] = "my_filename.root"
 
-If in doubt about the `__visu_tracks` content of the SD data bank, you can produce that output (careful) when specifying in the simulation configuration script the variant service option:
+If in doubt about the `__visu_tracks` content of the SD data bank, you can produce that output (careful, much larger output files) when specifying in the simulation configuration script the variant service option:
 
 [name="flsimulate.variantService" type="flsimulate::section"]
 

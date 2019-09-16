@@ -26,14 +26,15 @@ void SimValidationModule::initialize(const datatools::properties& myConfig,
                                    datatools::service_manager& flServices,
                                    dpp::module_handle_dict_type& /*moduleDict*/){
 
-  // Look for services
-  if (flServices.has("geometry")) {
-    const geomtools::geometry_service& GS = flServices.get<geomtools::geometry_service> ("geometry");
-    geometry_manager_ = &GS.get_geom_manager();
-    DT_THROW_IF(!geometry_manager_,
-                std::runtime_error,
-                "Null pointer to geometry manager return by geometry_service");
-  }
+  // Look for services, geometry not needed. Use as placeholder
+  // for requesting a future service to request information from the simulation code.
+  // if (flServices.has("geometry")) {
+  //   const geomtools::geometry_service& GS = flServices.get<geomtools::geometry_service> ("geometry");
+  //   geometry_manager_ = &GS.get_geom_manager();
+  //   DT_THROW_IF(!geometry_manager_,
+  //               std::runtime_error,
+  //               "Null pointer to geometry manager return by geometry_service");
+  // }
   // Extract the filename_out key from the supplied config, if
   // the key exists. datatools::properties throws an exception if
   // the key isn't in the config, so catch this if thrown and don't do
